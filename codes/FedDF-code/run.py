@@ -43,7 +43,7 @@ def build_mpi_script(conf, replacement=None):
 
     # get prefix_cmd.
     if conf.n_participated >= 1:
-        prefix_cmd = f"mpirun -n {conf.n_participated + 1} --hostfile {conf.hostfile} --mca orte_base_help_aggregate 0 --mca btl_tcp_if_exclude docker0,lo --prefix {conf.mpi_path} "
+        prefix_cmd = f"mpirun -n {conf.n_participated + 1} --hostfile {conf.hostfile} --mca orte_base_help_aggregate 0 --prefix {conf.mpi_path} "
         prefix_cmd += (
             f" -x {conf.mpi_env}"
             if conf.mpi_env is not None and len(conf.mpi_env) > 0
