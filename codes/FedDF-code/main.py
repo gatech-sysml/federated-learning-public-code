@@ -24,6 +24,9 @@ def main(conf):
     # init the config.
     init_config(conf)
 
+    if conf.graph.on_cuda:
+        torch.cuda.set_device(conf.graph.get_device(conf.graph.rank))
+
     # start federated learning.
     process = Master(conf) if conf.graph.rank == 0 else Worker(conf)
     process.run()
@@ -69,7 +72,10 @@ def init_config(conf):
         if conf.fl_aggregate is not None
         else conf.fl_aggregate
     )
-    [setattr(conf, f"fl_aggregate_{k}", v) for k, v in conf.fl_aggregate.items()]
+    [
+        setattr(conf, f"fl_aggregate_{k}", v)
+        for k, v in conf.fl_aggregate.items()
+    ]
 
     # define checkpoint for logging (for federated learning server).
     checkpoint.init_checkpoint(conf, rank=str(conf.graph.rank))
