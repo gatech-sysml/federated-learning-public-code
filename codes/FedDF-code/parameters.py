@@ -22,6 +22,32 @@ def get_args():
     # add arguments.
     parser.add_argument("--work_dir", default=None, type=str)
     parser.add_argument("--remote_exec", default=False, type=str2bool)
+    
+    #wandb
+    parser.add_argument("--wandb_logging", default=False, type=str2bool,  help="Enable wandb logging",)
+    parser.add_argument(
+        "--wandb_project_name",
+        type=str,
+        default="flofa",
+        metavar="N",
+        help="Project Name of wandb for logging",
+    )
+
+    parser.add_argument(
+        "--wandb_run_name",
+        type=str,
+        default="flofa",
+        metavar="N",
+        help="Run Name of wandb for logging",
+    )
+
+    parser.add_argument(
+        "--wandb_entity",
+        type=str,
+        default="flofa",
+        metavar="N",
+        help="helps in creating a project under teams or personal username",
+    )
 
     # dataset.
     parser.add_argument("--data", default="cifar10", help="a specific dataset name")

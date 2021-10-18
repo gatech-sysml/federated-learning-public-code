@@ -3,7 +3,7 @@ import os
 import json
 import time
 import platform
-
+import wandb
 from pcode.utils.op_files import write_txt
 
 
@@ -109,6 +109,8 @@ def display_training_stat(conf, scheduler, tracker):
 def display_test_stat(conf, coordinator, tracker, label="local"):
     current_time = time.strftime("%Y-%m-%d %H:%M:%S")
 
+    if conf.wandb_logging:
+        wandb.log({label: {**tracker(), "comm_round": conf.graph.comm_round}}, step=conf.graph.comm_round)
     # display the runtime training information.
     conf.logger.log_metric(
         name="runtime",
@@ -121,6 +123,17 @@ def display_test_stat(conf, coordinator, tracker, label="local"):
 
 def dispaly_best_test_stat(conf, coordinator):
     current_time = time.strftime("%Y-%m-%d %H:%M:%S")
+    
+    
+    #   wandb.run.summary["best_accuracy"] = test_accuracy
+    if conf.wandb_logging:
+        best_perf = coordinator()
+        best_round = None
+        for perf_name in best_perf:
+            wandb.run.summary["test_best_"+perf_name] = best_perf[perf_name][0]
+            if best_round is None:
+                best_round = best_perf[perf_name][1]
+        wandb.run.summary["test_best_comm_round"] = best_round
 
     conf.logger.log_metric(
         name="runtime",

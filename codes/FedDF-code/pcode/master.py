@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import copy
-
+import wandb
 import numpy as np
 import torch
 import torch.distributed as dist
@@ -21,6 +21,15 @@ from pcode.utils.early_stopping import EarlyStoppingTracker
 class Master(object):
     def __init__(self, conf):
         self.conf = conf
+        
+        if conf.wandb_logging:
+            wandb.init(
+                project=conf.wandb_project_name,
+                name=conf.wandb_run_name,
+                entity=conf.wandb_entity,
+                config=conf,
+                dir=conf.checkpoint_dir
+            )
 
         # some initializations.
         self.client_ids = list(range(1, 1 + conf.n_clients))
